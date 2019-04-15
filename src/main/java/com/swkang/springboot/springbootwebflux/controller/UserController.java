@@ -2,11 +2,14 @@ package com.swkang.springboot.springbootwebflux.controller;
 
 import com.swkang.springboot.springbootwebflux.domain.User;
 import com.swkang.springboot.springbootwebflux.service.UserService;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+
+import java.time.Duration;
 
 @RestController
 @RequestMapping("/api/v1/user")
@@ -33,9 +36,9 @@ public class UserController {
         return userService.getById(id);
     }
 
-    @GetMapping("list")
+    @GetMapping(value = "list", produces = MediaType.APPLICATION_STREAM_JSON_VALUE)
     public Flux<User> list(){
-        return userService.list();
+        return userService.list().delayElements(Duration.ofSeconds(1));
     }
 
     @GetMapping("delete")
